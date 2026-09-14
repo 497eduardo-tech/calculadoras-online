@@ -4,15 +4,17 @@ import string
 import streamlit as st
 
 st.set_page_config(
-    page_title="Central de Calculadoras Online",
+    page_title="Central de Calculadoras Online | Finanças, Saúde e Utilidades",
     page_icon="🧮",
     layout="wide",
 )
 
-st.title("🧮 Central de Calculadoras Online")
+st.title("🧮 Central de Calculadoras Online Grátis: Juros, IMC, Salário e Mais")
 st.write(
-    "As ferramentas de cálculo mais buscadas da internet, reunidas em um só"
-    " lugar."
+    "Bem-vindo à ferramenta definitiva da web. Calcule juros compostos, IMC,"
+    " salário líquido CLT, Imposto de Renda (IRPF), churrasco, conversão de"
+    " moedas e dezenas de outras utilidades práticas em segundos e de forma"
+    " 100% gratuita."
 )
 
 # Menu lateral com as categorias principais
@@ -79,7 +81,6 @@ if categoria == "Financeiras":
         "Rendimento Tributável Mensal (R$)", value=4500.0, key="ir_sal"
     )
     if st.button("Calcular IRPF", key="b_irpf"):
-      # Tabela progressiva simplificada de referência
       if sal_irpf <= 2259.20:
         imposto = 0.0
         aliquota = "Isento"
@@ -386,8 +387,8 @@ elif categoria == "Utilidades e Dia a Dia":
     criancas = st.number_input("Número de Crianças", value=4, key="ch_cr")
     if st.button("Calcular Suprimentos", key="b_churras"):
       carne = (adultos * 400 + criancas * 200) / 1000
-      cerveja = adultos * 3  # latas de 350ml média
-      refrigerante = (adultos + criancas) * 0.5  # litros
+      cerveja = adultos * 3
+      refrigerante = (adultos + criancas) * 0.5
       st.success(
           f"🥩 Carne necessária: {carne:.1f} kg | 🍺 Cerveja:"
           f" {cerveja} latas | 🥤 Refrigerante: {refrigerante:.1f} litros"
