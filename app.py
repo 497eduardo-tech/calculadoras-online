@@ -20,9 +20,9 @@ categoria = st.sidebar.selectbox(
     "Escolha a Categoria",
     [
         "Financeiras",
-        "💪 Saúde e Bem-Estar",
-        "📐 Matemática e Pessoal",
-        "⚡ Utilidades e Dia a Dia",
+        "Saúde e Bem-Estar",
+        "Matemática e Pessoal",
+        "Utilidades e Dia a Dia",
     ],
 )
 
@@ -34,8 +34,11 @@ if categoria == "Financeiras":
       "Juros Compostos",
       "Conversor de Moedas",
       "Salário Líquido (CLT)",
+      "Imposto de Renda (IRPF)",
       "Desconto / Porcentagem",
-      "Financiamento / Empréstimo",
+      "Empréstimo (Tabela Price)",
+      "Financiamento Imobiliário",
+      "Cálculo de Férias / Rescisão",
       "ROI e Margem de Lucro",
   ])
 
@@ -71,6 +74,35 @@ if categoria == "Financeiras":
       st.success(f"Salário Líquido Estimado: R$ {liquido:.2f}")
 
   with aba_fin[3]:
+    st.subheader("Simulador Rápido de Imposto de Renda (IRPF)")
+    sal_irpf = st.number_input(
+        "Rendimento Tributável Mensal (R$)", value=4500.0, key="ir_sal"
+    )
+    if st.button("Calcular IRPF", key="b_irpf"):
+      # Tabela progressiva simplificada de referência
+      if sal_irpf <= 2259.20:
+        imposto = 0.0
+        aliquota = "Isento"
+      elif sal_irpf <= 2826.65:
+        imposto = (sal_irpf * 0.075) - 169.44
+        aliquota = "7.5%"
+      elif sal_irpf <= 3751.05:
+        imposto = (sal_irpf * 0.15) - 381.44
+        aliquota = "15%"
+      elif sal_irpf <= 4664.68:
+        imposto = (sal_irpf * 0.225) - 662.77
+        aliquota = "22.5%"
+      else:
+        imposto = (sal_irpf * 0.275) - 896.00
+        aliquota = "27.5%"
+
+      imposto = max(0.0, imposto)
+      st.success(
+          f"Alíquota efetiva: {aliquota} | Imposto Retido Estimado: R$"
+          f" {imposto:.2f}"
+      )
+
+  with aba_fin[4]:
     st.subheader("Cálculo de Desconto Comercial")
     preco = st.number_input("Preço Original (R$)", value=150.0, key="d_preco")
     desc = st.number_input("Desconto (%)", value=15.0, key="d_desc")
@@ -81,8 +113,8 @@ if categoria == "Financeiras":
           f"Preço Final: R$ {final:.2f} (Você economiza R$ {economia:.2f})"
       )
 
-  with aba_fin[4]:
-    st.subheader("Simulação Básica de Empréstimo")
+  with aba_fin[5]:
+    st.subheader("Simulação de Empréstimo (Tabela Price)")
     val_emp = st.number_input("Valor do Empréstimo (R$)", value=10000.0, key="e_v")
     juros_emp = st.number_input("Taxa de Juros Mensal (%)", value=2.0, key="e_j")
     meses_emp = st.number_input("Parcelas (meses)", value=12, key="e_m")
@@ -94,7 +126,46 @@ if categoria == "Financeiras":
           f" R$ {pmt * meses_emp:.2f}"
       )
 
-  with aba_fin[5]:
+  with aba_fin[6]:
+    st.subheader("Simulador de Financiamento Imobiliário")
+    imovel = st.number_input("Valor do Imóvel (R$)", value=300000.0, key="fin_im")
+    entrada = st.number_input(
+        "Valor da Entrada (R$)", value=60000.0, key="fin_ent"
+    )
+    anos = st.number_input("Prazo (anos)", value=30, key="fin_ano")
+    taxa_anual = st.number_input(
+        "Taxa de Juros Anual (%)", value=10.0, key="fin_tx"
+    )
+    if st.button("Calcular Financiamento", key="b_fin"):
+      valor_fin = imovel - entrada
+      meses_f = anos * 12
+      i_m = (taxa_anual / 100) / 12
+      pmt_im = (
+          valor_fin * (i_m * (1 + i_m) ** meses_f) / (((1 + i_m) ** meses_f) - 1)
+      )
+      st.success(
+          f"Valor financiado: R$ {valor_fin:.2f} | 1ª Parcela estimada:"
+          f" R$ {pmt_im:.2f}"
+      )
+
+  with aba_fin[7]:
+    st.subheader("Cálculo Estimado de Férias")
+    sal_ferias = st.number_input(
+        "Salário Bruto Mensal (R$)", value=3000.0, key="f_sal"
+    )
+    dias_ferias = st.number_input(
+        "Dias de Férias a gozar", value=30, key="f_dias"
+    )
+    if st.button("Calcular Férias", key="b_ferias"):
+      proporcao = dias_ferias / 30
+      terco = (sal_ferias * proporcao) / 3
+      total_ferias = (sal_ferias * proporcao) + terco
+      st.success(
+          f"Valor Bruto das Férias (com 1/3 constitucional): R$"
+          f" {total_ferias:.2f}"
+      )
+
+  with aba_fin[8]:
     st.subheader("ROI e Margem de Lucro")
     custo = st.number_input("Custo de Produção (R$)", value=40.0, key="l_c")
     venda = st.number_input("Preço de Venda (R$)", value=100.0, key="l_v")
@@ -104,14 +175,15 @@ if categoria == "Financeiras":
       st.success(f"Lucro Unitário: R$ {lucro:.2f} | Margem: {margem:.2f}%")
 
 # --- 2. CATEGORIA: SAÚDE E BEM-ESTAR ---
-elif categoria == "💪 Saúde e Bem-Estar":
+elif categoria == "Saúde e Bem-Estar":
   st.header("Calculadoras de Saúde (As mais procuradas)")
 
   aba_saude = st.tabs([
       "IMC (Massa Corporal)",
-      "Gasto Calórico (TMB)",
+      "Gasto Calórico Avançado",
       "Consumo de Água",
       "Frequência Cardíaca",
+      "Percentual de Gordura",
       "Peso Ideal",
   ])
 
@@ -133,17 +205,40 @@ elif categoria == "💪 Saúde e Bem-Estar":
       st.success(f"Seu IMC é {imc:.2f} ({classificacao})")
 
   with aba_saude[1]:
-    st.subheader("Gasto Calórico Basal (TMB)")
+    st.subheader("Gasto Calórico Total (com Nível de Atividade)")
     p = st.number_input("Peso (kg)", value=70.0, key="tmb_p")
     a = st.number_input("Altura (cm)", value=175.0, key="tmb_a")
     i = st.number_input("Idade (anos)", value=30, key="tmb_i")
     sexo = st.selectbox("Sexo Biológico", ["Masculino", "Feminino"], key="tmb_s")
-    if st.button("Calcular TMB", key="b_tmb"):
+    atividade = st.selectbox(
+        "Nível de Atividade",
+        [
+            "Sedentário (pouco ou nenhum exercício)",
+            "Levemente ativo (exercício leve 1-3 dias/sem)",
+            "Moderadamente ativo (exercício moderado 3-5 dias/sem)",
+            "Altamente ativo (exercício pesado 6-7 dias/sem)",
+        ],
+        key="tmb_ativ",
+    )
+    if st.button("Calcular Gasto Total", key="b_tmb"):
       if sexo == "Masculino":
         tmb = 88.36 + (13.4 * p) + (4.8 * a) - (5.7 * i)
       else:
         tmb = 447.6 + (9.2 * p) + (3.1 * a) - (4.3 * i)
-      st.success(f"Gasto Calórico Basal: {tmb:.1f} kcal/dia")
+
+      fator = 1.2
+      if "Levemente" in atividade:
+        fator = 1.375
+      elif "Moderadamente" in atividade:
+        fator = 1.55
+      elif "Altamente" in atividade:
+        fator = 1.725
+
+      gasto_total = tmb * fator
+      st.success(
+          f"Gasto Basal: {tmb:.1f} kcal | Gasto Total Diário:"
+          f" **{gasto_total:.1f} kcal**"
+      )
 
   with aba_saude[2]:
     st.subheader("Água Diária Recomendada")
@@ -166,6 +261,18 @@ elif categoria == "💪 Saúde e Bem-Estar":
       )
 
   with aba_saude[4]:
+    st.subheader("Percentual de Gordura Corporal (Estimativa IMC)")
+    peso_g = st.number_input("Peso (kg)", value=70.0, key="g_p")
+    altura_g = st.number_input("Altura (m)", value=1.75, key="g_a")
+    idade_g = st.number_input("Idade", value=30, key="g_id")
+    sexo_g = st.selectbox("Sexo", ["Masculino", "Feminino"], key="g_sex")
+    if st.button("Calcular Gordura", key="b_gordura"):
+      imc_g = peso_g / (altura_g**2)
+      f_sexo = 1 if sexo_g == "Masculino" else 0
+      pGC = (1.20 * imc_g) + (0.23 * idade_g) - (10.8 * f_sexo) - 5.4
+      st.success(f"Percentual de Gordura Estimado: {pGC:.1f}%")
+
+  with aba_saude[5]:
     st.subheader("Peso Ideal Estimado")
     alt_pi = st.number_input("Altura (m)", value=1.75, key="pi_a")
     sexo_pi = st.selectbox("Sexo", ["Masculino", "Feminino"], key="pi_s")
@@ -174,7 +281,7 @@ elif categoria == "💪 Saúde e Bem-Estar":
       st.success(f"Peso ideal estimado: {pi:.2f} kg")
 
 # --- 3. CATEGORIA: MATEMÁTICA E PESSOAL ---
-elif categoria == "📐 Matemática e Pessoal":
+elif categoria == "Matemática e Pessoal":
   st.header("Matemática Prática")
 
   aba_mat = st.tabs([
@@ -183,6 +290,8 @@ elif categoria == "📐 Matemática e Pessoal":
       "Média Aritmética",
       "Equação 2º Grau (Bhaskara)",
       "Teorema de Pitágoras",
+      "Área de Círculo",
+      "Bases Numéricas",
   ])
 
   with aba_mat[0]:
@@ -235,20 +344,73 @@ elif categoria == "📐 Matemática e Pessoal":
       hip = ((cat1**2) + (cat2**2)) ** 0.5
       st.success(f"Hipotenusa (c): {hip:.2f}")
 
+  with aba_mat[5]:
+    st.subheader("Área e Perímetro de Círculo")
+    raio_c = st.number_input("Raio do círculo", value=5.0, key="rc_r")
+    if st.button("Calcular Círculo", key="b_circ"):
+      import math
+
+      area = math.pi * (raio_c**2)
+      perimetro = 2 * math.pi * raio_c
+      st.success(f"Área: {area:.2f} | Perímetro (Circunferência): {perimetro:.2f}")
+
+  with aba_mat[6]:
+    st.subheader("Conversor de Bases Numéricas (Decimal)")
+    dec_val = st.number_input("Número Decimal", value=42, key="bn_dec")
+    if st.button("Converter Base", key="b_base"):
+      st.success(
+          f"Binário: {bin(int(dec_val))} | Hexadecimal:"
+          f" {hex(int(dec_val)).upper()}"
+      )
+
 # --- 4. CATEGORIA: UTILIDADES E DIA A DIA ---
-elif categoria == "⚡ Utilidades e Dia a Dia":
+elif categoria == "Utilidades e Dia a Dia":
   st.header("Conversores e Utilidades Populares")
 
   aba_util = st.tabs([
+      "Calculadora de Churrasco",
+      "Medidas Culinárias",
       "Dias entre Datas",
       "Temperatura",
       "Gorjeta (Garçom)",
       "Gasto de Combustível",
+      "Velocidade Média",
+      "Armazenamento (MB / GB)",
       "Gerador de Senhas",
       "Distância e Peso",
   ])
 
   with aba_util[0]:
+    st.subheader("Calculadora de Churrasco por Pessoas")
+    adultos = st.number_input("Número de Adultos", value=10, key="ch_ad")
+    criancas = st.number_input("Número de Crianças", value=4, key="ch_cr")
+    if st.button("Calcular Suprimentos", key="b_churras"):
+      carne = (adultos * 400 + criancas * 200) / 1000
+      cerveja = adultos * 3  # latas de 350ml média
+      refrigerante = (adultos + criancas) * 0.5  # litros
+      st.success(
+          f"🥩 Carne necessária: {carne:.1f} kg | 🍺 Cerveja:"
+          f" {cerveja} latas | 🥤 Refrigerante: {refrigerante:.1f} litros"
+      )
+
+  with aba_util[1]:
+    st.subheader("Conversor de Medidas Culinárias (Aproximado)")
+    ingrediente = st.selectbox(
+        "Ingrediente / Base", ["Água / Leite (ml)", "Açúcar (g)", "Farinha (g)"]
+    )
+    xicaras = st.number_input("Quantidade em Xícaras", value=1.0, key="cul_x")
+    if st.button("Converter para Gramas/ml", key="b_cul"):
+      if "Água" in ingrediente:
+        res = xicaras * 240
+        st.success(f"{xicaras} xícara(s) = {res:.0f} ml")
+      elif "Açúcar" in ingrediente:
+        res = xicaras * 180
+        st.success(f"{xicaras} xícara(s) = {res:.0f} g")
+      else:
+        res = xicaras * 120
+        st.success(f"{xicaras} xícara(s) = {res:.0f} g")
+
+  with aba_util[2]:
     st.subheader("Diferença de Dias entre Datas")
     d1 = st.date_input("Data inicial", datetime.date(2026, 1, 1), key="d_ini")
     d2 = st.date_input("Data final", datetime.date(2026, 12, 31), key="d_fim")
@@ -256,14 +418,14 @@ elif categoria == "⚡ Utilidades e Dia a Dia":
       diff = (d2 - d1).days
       st.success(f"Total de dias entre as datas: {abs(diff)} dias")
 
-  with aba_util[1]:
+  with aba_util[3]:
     st.subheader("Conversor de Temperatura")
     c_temp = st.number_input("Temperatura em Celsius (°C)", value=25.0, key="t_c")
     if st.button("Converter para Fahrenheit", key="b_temp"):
       f_temp = (c_temp * 9 / 5) + 32
       st.success(f"Temperatura em Fahrenheit: {f_temp:.1f} °F")
 
-  with aba_util[2]:
+  with aba_util[4]:
     st.subheader("Calculadora de Gorjeta")
     conta = st.number_input("Valor da Conta (R$)", value=120.0, key="g_conta")
     porc = st.slider("Porcentagem de Gorjeta (%)", 0, 30, 10, key="g_porc")
@@ -274,7 +436,7 @@ elif categoria == "⚡ Utilidades e Dia a Dia":
           f" {conta + gorjeta:.2f}"
       )
 
-  with aba_util[3]:
+  with aba_util[5]:
     st.subheader("Custo de Combustível por Viagem")
     distancia_v = st.number_input(
         "Distância da viagem (km)", value=250.0, key="cb_d"
@@ -293,7 +455,24 @@ elif categoria == "⚡ Utilidades e Dia a Dia":
           f" {custo_total:.2f}"
       )
 
-  with aba_util[4]:
+  with aba_util[6]:
+    st.subheader("Cálculo de Velocidade Média")
+    d_vm = st.number_input("Distância percorrida (km)", value=150.0, key="vm_d")
+    t_vm = st.number_input("Tempo gasto (horas)", value=2.5, key="vm_t")
+    if st.button("Calcular Velocidade", key="b_vm"):
+      vm = d_vm / t_vm
+      st.success(f"Velocidade Média: {vm:.2f} km/h")
+
+  with aba_util[7]:
+    st.subheader("Conversor de Armazenamento Digital")
+    val_gb = st.number_input("Valor em Gigabytes (GB)", value=50.0, key="st_gb")
+    if st.button("Converter para MB", key="b_stor"):
+      st.success(
+          f"{val_gb} GB equivalem a {val_gb * 1024:.0f} MB ou"
+          f" {val_gb / 1024:.2f} TB"
+      )
+
+  with aba_util[8]:
     st.subheader("Gerador de Senhas Seguras")
     tamanho = st.slider("Tamanho da senha", 6, 32, 12, key="s_tam")
     if st.button("Gerar Senha", key="b_senha"):
@@ -301,7 +480,7 @@ elif categoria == "⚡ Utilidades e Dia a Dia":
       senha = "".join(random.choice(chars) for _ in range(tamanho))
       st.code(senha)
 
-  with aba_util[5]:
+  with aba_util[9]:
     st.subheader("Conversores Rápidos")
     tipo_conv = st.selectbox(
         "Selecione a conversão",
