@@ -1,364 +1,315 @@
-import streamlit as st
-from datetime import datetime, date
+import datetime
 import random
 import string
+import streamlit as st
 
-# Configuração da página com foco em SEO (Título rico e descritivo)
 st.set_page_config(
-    page_title="Central de Calculadoras Online Grátis | Ferramentas Práticas",
+    page_title="Central de Calculadoras Online",
     page_icon="🧮",
     layout="wide",
-    initial_sidebar_state="expanded"
 )
 
-# Estilização profissional e limpa
-st.markdown("""
-    <style>
-    .main-title {
-        font-size: 2.5rem;
-        color: #1E3A8A;
-        font-weight: 800;
-        margin-bottom: 0px;
-    }
-    .subtitle {
-        font-size: 1.15rem;
-        color: #4B5563;
-        margin-bottom: 25px;
-    }
-    .seo-box {
-        background-color: #F8FAFC;
-        border-left: 5px solid #3B82F6;
-        padding: 15px;
-        border-radius: 5px;
-        margin-top: 20px;
-        margin-bottom: 20px;
-        font-size: 0.95rem;
-        color: #334155;
-    }
-    </style>
-""", unsafe_allow_html=True)
+st.title("🧮 Central de Calculadoras Online")
+st.write(
+    "As ferramentas de cálculo mais buscadas da internet, reunidas em um só"
+    " lugar."
+)
 
-# Cabeçalho Principal otimizado para palavras-chave
-st.markdown('<p class="main-title">🧮 Central de Calculadoras Online e Ferramentas Práticas</p>', unsafe_allow_html=True)
-st.markdown('<p class="subtitle">Resolva cálculos do dia a dia, conversões e formatações de texto de forma rápida, gratuita e sem precisar instalar nada.</p>', unsafe_allow_html=True)
-
-# Menu Lateral Organizacional
+# Menu lateral com as categorias principais
 categoria = st.sidebar.selectbox(
-    "📂 Escolha a Categoria de Ferramentas:",
+    "Escolha a Categoria",
     [
-        "Matemática & Proporção",
-        "Texto & Formatação",
-        "Segurança & Utilidades",
-        "Datas & Horas",
-        "Saúde & Corpo",
-        "Conversão de Medidas"
-    ]
+        "Financeiras",
+        "💪 Saúde e Bem-Estar",
+        "📐 Matemática e Pessoal",
+        "⚡ Utilidades e Dia a Dia",
+    ],
 )
 
-st.sidebar.markdown("---")
-st.sidebar.info("💡 **Dica de SEO:** Sites rápidos, responsivos e com explicações detalhadas rankeiam mais rápido no Google!")
+# --- 1. CATEGORIA: FINANCEIRAS ---
+if categoria == "Financeiras":
+  st.header("Calculadoras Financeiras")
 
-# ==========================================
-# 1. MATEMÁTICA & PROPORÇÃO
-# ==========================================
-if categoria == "Matemática & Proporção":
-    st.header("📐 Calculadoras de Matemática & Proporção")
-    ferramenta = st.selectbox("Selecione a ferramenta específica:", [
-        "Calculadora de Porcentagem", 
-        "Regra de Três Simples", 
-        "Média Aritmética", 
-        "Cálculo de Frações"
-    ])
-    
-    if ferramenta == "Calculadora de Porcentagem":
-        st.subheader("Calculadora de Porcentagem Online")
-        st.write("Calcule acréscimos, descontos e o valor percentual de qualquer quantia instantaneamente.")
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            valor = st.number_input("Valor base (Ex: 150):", value=100.0)
-        with col2:
-            porcentagem = st.number_input("Porcentagem % (Ex: 15):", value=15.0)
-            
-        if st.button("Calcular Porcentagem", type="primary"):
-            res = (valor * porcentagem) / 100
-            st.success(f"O valor correspondente a {porcentagem}% de {valor} é: **{res:.2f}**")
-            st.info(f"✨ **Valores Finais:** Com acréscimo: **{valor + res:.2f}** | Com desconto: **{valor - res:.2f}**")
-            
-        st.markdown("""
-        <div class="seo-box">
-        <b>Como usar esta calculadora de porcentagem para SEO:</b><br>
-        Esta ferramenta ajuda estudantes, comerciantes e profissionais a resolver cálculos financeiros e de vendas do dia a dia. 
-        Basta inserir o valor base e a porcentagem desejada para obter o resultado exato na hora.
-        </div>
-        """, unsafe_allow_html=True)
+  aba_fin = st.tabs([
+      "Juros Compostos",
+      "Conversor de Moedas",
+      "Salário Líquido (CLT)",
+      "Desconto / Porcentagem",
+      "Financiamento / Empréstimo",
+      "ROI e Margem de Lucro",
+  ])
 
-    elif ferramenta == "Regra de Três Simples":
-        st.subheader("Calculadora de Regra de Três Simples")
-        st.write("Resolva problemas de proporção matemática de forma simples e direta.")
-        st.markdown("*Se **A** está para **B**, assim como **C** está para **X***")
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            a = st.number_input("Valor A:", value=10.0)
-            c = st.number_input("Valor C (proporção):", value=50.0)
-        with col2:
-            b = st.number_input("Valor B:", value=20.0)
-            
-        if st.button("Calcular Regra de Três", type="primary"):
-            if a != 0:
-                x = (b * c) / a
-                st.success(f"O resultado de X é: **{x:.4f}**")
-            else:
-                st.error("O valor de 'A' não pode ser zero.")
+  with aba_fin[0]:
+    st.subheader("Calculadora de Juros Compostos")
+    cap = st.number_input("Capital Inicial (R$)", value=1000.0, key="j_cap")
+    aporte = st.number_input(
+        "Aportes Mensais (R$)", value=200.0, key="j_aporte"
+    )
+    tax = st.number_input("Taxa de Juros Mensal (%)", value=1.0, key="j_tax")
+    meses = st.number_input("Tempo (meses)", value=12, key="j_meses")
+    if st.button("Calcular Juros Compostos", key="b_juros"):
+      montante = cap
+      for _ in range(int(meses)):
+        montante = (montante + aporte) * (1 + (tax / 100))
+      st.success(f"Montante Final Acumulado: R$ {montante:.2f}")
 
-    elif ferramenta == "Média Aritmética":
-        st.subheader("Calculadora de Média Escolar e Aritmética")
-        st.write("Calcule a média de notas, pontuações ou números informando os valores separados por vírgula.")
-        
-        numeros_str = st.text_input("Digite os números separados por vírgula:", value="7.0, 8.5, 9.0, 10.0")
-        if st.button("Calcular Média", type="primary"):
-            try:
-                nums = [float(n.strip()) for n in numeros_str.split(",")]
-                media = sum(nums) / len(nums)
-                st.success(f"A média aritmética é: **{media:.2f}** (Total de elementos: {len(nums)})")
-            except:
-                st.error("Por favor, insira apenas números válidos separados por vírgula (ex: 7, 8, 9).")
+  with aba_fin[1]:
+    st.subheader("Conversor de Moedas (Simulador)")
+    valor_brl = st.number_input("Valor em Reais (R$)", value=100.0, key="m_brl")
+    cotacao_usd = st.number_input(
+        "Cotação do Dólar (R$)", value=5.0, key="m_usd"
+    )
+    if st.button("Converter para Dólar", key="b_moeda"):
+      st.success(f"Valor equivalente: US$ {valor_brl / cotacao_usd:.2f}")
 
-    elif ferramenta == "Cálculo de Frações":
-        st.subheader("Calculadora de Operações com Frações")
-        col1, col2 = st.columns(2)
-        with col1:
-            n1 = st.number_input("Numerador 1", value=1, step=1)
-            d1 = st.number_input("Denominador 1", value=2, step=1)
-        with col2:
-            n2 = st.number_input("Numerador 2", value=1, step=1, key="n2")
-            d2 = st.number_input("Denominador 2", value=4, step=1, key="d2")
-            
-        operacao = st.selectbox("Escolha a operação:", ["Soma (+)", "Subtração (-)", "Multiplicação (×)", "Divisão (÷)"])
-        
-        if st.button("Calcular Fração", type="primary"):
-            if d1 == 0 or d2 == 0:
-                st.error("O denominador não pode ser zero.")
-            else:
-                if "Soma" in operacao:
-                    num_res = (n1 * d2) + (n2 * d1)
-                    den_res = d1 * d2
-                elif "Subtração" in operacao:
-                    num_res = (n1 * d2) - (n2 * d1)
-                    den_res = d1 * d2
-                elif "Multiplicação" in operacao:
-                    num_res = n1 * n2
-                    den_res = d1 * d2
-                else:
-                    num_res = n1 * d2
-                    den_res = d1 * n2
-                
-                st.success(f"Resultado simplificado/fração: **{num_res}/{den_res}** (Valor decimal: {num_res/den_res:.4f})")
+  with aba_fin[2]:
+    st.subheader("Estimativa de Salário Líquido")
+    bruto = st.number_input("Salário Bruto (R$)", value=3500.0, key="s_bruto")
+    if st.button("Calcular Líquido", key="b_sal"):
+      desconto = bruto * 0.11 if bruto <= 4000 else bruto * 0.20
+      liquido = bruto - desconto
+      st.success(f"Salário Líquido Estimado: R$ {liquido:.2f}")
 
-# ==========================================
-# 2. TEXTO & FORMATAÇÃO
-# ==========================================
-elif categoria == "Texto & Formatação":
-    st.header("📝 Ferramentas de Texto & Formatação")
-    ferramenta = st.selectbox("Selecione a ferramenta:", [
-        "Contador de Palavras e Caracteres", 
-        "Remover Espaços Extras", 
-        "Conversor Maiúsculas / Minúsculas"
-    ])
-    
-    texto = st.text_area("Digite ou cole seu texto aqui:", value="Exemplo de texto para testar as ferramentas de formatação e contagem online.")
-    
-    if ferramenta == "Contador de Palavras e Caracteres":
-        palavras = len(texto.split()) if texto.strip() else 0
-        caracteres = len(texto)
-        caracteres_sem_espaco = len(texto.replace(" ", ""))
-        
-        col1, col2, col3 = st.columns(3)
-        col1.metric("Total de Palavras", palavras)
-        col2.metric("Caracteres (com espaços)", caracteres)
-        col3.metric("Caracteres (sem espaços)", caracteres_sem_espaco)
+  with aba_fin[3]:
+    st.subheader("Cálculo de Desconto Comercial")
+    preco = st.number_input("Preço Original (R$)", value=150.0, key="d_preco")
+    desc = st.number_input("Desconto (%)", value=15.0, key="d_desc")
+    if st.button("Calcular Desconto", key="b_desc"):
+      final = preco * (1 - desc / 100)
+      economia = preco - final
+      st.success(
+          f"Preço Final: R$ {final:.2f} (Você economiza R$ {economia:.2f})"
+      )
 
-    elif ferramenta == "Remover Espaços Extras":
-        if st.button("Remover Espaços Desnecessários", type="primary"):
-            texto_limpo = " ".join(texto.split())
-            st.subheader("Texto Limpo:")
-            st.code(texto_limpo)
+  with aba_fin[4]:
+    st.subheader("Simulação Básica de Empréstimo")
+    val_emp = st.number_input("Valor do Empréstimo (R$)", value=10000.0, key="e_v")
+    juros_emp = st.number_input("Taxa de Juros Mensal (%)", value=2.0, key="e_j")
+    meses_emp = st.number_input("Parcelas (meses)", value=12, key="e_m")
+    if st.button("Calcular Parcelas", key="b_emp"):
+      i = juros_emp / 100
+      pmt = val_emp * (i * (1 + i) ** meses_emp) / (((1 + i) ** meses_emp) - 1)
+      st.success(
+          f"Valor da Parcela Mensal: R$ {pmt:.2f} | Total pago:"
+          f" R$ {pmt * meses_emp:.2f}"
+      )
 
-    elif ferramenta == "Conversor Maiúsculas / Minúsculas":
-        col1, col2, col3 = st.columns(3)
-        if col1.button("TUDO MAIÚSCULO"):
-            st.code(texto.upper())
-        if col2.button("tudo minúsculo"):
-            st.code(texto.lower())
-        if col3.button("Primeira Letra Maiúscula"):
-            st.code(texto.title())
+  with aba_fin[5]:
+    st.subheader("ROI e Margem de Lucro")
+    custo = st.number_input("Custo de Produção (R$)", value=40.0, key="l_c")
+    venda = st.number_input("Preço de Venda (R$)", value=100.0, key="l_v")
+    if st.button("Calcular Lucratividade", key="b_lucro"):
+      lucro = venda - custo
+      margem = (lucro / venda) * 100
+      st.success(f"Lucro Unitário: R$ {lucro:.2f} | Margem: {margem:.2f}%")
 
-# ==========================================
-# 3. SEGURANÇA & UTILIDADES
-# ==========================================
-elif categoria == "Segurança & Utilidades":
-    st.header("🔒 Segurança & Utilidades Comerciais")
-    ferramenta = st.selectbox("Selecione a ferramenta:", [
-        "Gerador de Senhas Seguras", 
-        "Calculadora de Desconto / Acréscimo Comercial"
-    ])
-    
-    if ferramenta == "Gerador de Senhas Seguras":
-        st.subheader("Gerador de Senhas Fortes Online")
-        tamanho = st.slider("Tamanho da senha:", min_value=6, max_value=32, value=12)
-        inc_maiusc = st.checkbox("Incluir Letras Maiúsculas (A-Z)", value=True)
-        inc_nums = st.checkbox("Incluir Números (0-9)", value=True)
-        inc_simbolos = st.checkbox("Incluir Símbolos Especiais (!@#$)", value=True)
-        
-        if st.button("Gerar Senha Segura", type="primary"):
-            chars = string.ascii_lowercase
-            if inc_maiusc: chars += string.ascii_uppercase
-            if inc_nums: chars += string.digits
-            if inc_simbolos: chars += "!@#$%^&*()_+-=[]{}|;:,.<>?"
-            
-            senha = "".join(random.choice(chars) for _ in range(tamanho))
-            st.success("Senha gerada com sucesso:")
-            st.code(senha)
+# --- 2. CATEGORIA: SAÚDE E BEM-ESTAR ---
+elif categoria == "💪 Saúde e Bem-Estar":
+  st.header("Calculadoras de Saúde (As mais procuradas)")
 
-    elif ferramenta == "Calculadora de Desconto / Acréscimo Comercial":
-        st.subheader("Calculadora de Preço com Desconto ou Aumento")
-        preco_inicial = st.number_input("Valor original do produto (R$):", value=150.0)
-        porcentagem_com = st.number_input("Percentual (%):", value=10.0)
-        tipo = st.radio("Selecione a operação:", ["Desconto", "Aumento / Acréscimo"])
-        
-        if st.button("Calcular Preço Final", type="primary"):
-            ajuste = (preco_inicial * porcentagem_com) / 100
-            if tipo == "Desconto":
-                final = preco_inicial - ajuste
-                st.success(f"Desconto aplicado: R$ {ajuste:.2f} | **Preço Final com Desconto: R$ {final:.2f}**")
-            else:
-                final = preco_inicial + ajuste
-                st.success(f"Acréscimo aplicado: R$ {ajuste:.2f} | **Preço Final com Aumento: R$ {final:.2f}**")
+  aba_saude = st.tabs([
+      "IMC (Massa Corporal)",
+      "Gasto Calórico (TMB)",
+      "Consumo de Água",
+      "Frequência Cardíaca",
+      "Peso Ideal",
+  ])
 
-# ==========================================
-# 4. DATAS & HORAS
-# ==========================================
-elif categoria == "Datas & Horas":
-    st.header("📅 Calculadoras de Datas & Horas")
-    ferramenta = st.selectbox("Selecione a ferramenta:", [
-        "Calculadora de Idade Exata", 
-        "Diferença de Dias entre Datas", 
-        "Soma de Horas e Minutos"
-    ])
-    
-    if ferramenta == "Calculadora de Idade Exata":
-        st.subheader("Calculadora de Idade em Anos")
-        nasc = st.date_input("Data de nascimento:", value=date(1995, 1, 1))
-        if st.button("Calcular Idade", type="primary"):
-            hoje = date.today()
-            idade_anos = hoje.year - nasc.year - ((hoje.month, hoje.day) < (nasc.month, nasc.day))
-            st.success(f"Você possui **{idade_anos} anos** completos até hoje.")
+  with aba_saude[0]:
+    st.subheader("Índice de Massa Corporal (IMC)")
+    peso = st.number_input("Peso (kg)", value=70.0, key="imc_p")
+    altura = st.number_input("Altura (m)", value=1.75, key="imc_a")
+    if st.button("Calcular IMC", key="b_imc"):
+      imc = peso / (altura**2)
+      classificacao = (
+          "Abaixo do peso"
+          if imc < 18.5
+          else "Peso normal"
+          if imc < 25
+          else "Sobrepeso"
+          if imc < 30
+          else "Obesidade"
+      )
+      st.success(f"Seu IMC é {imc:.2f} ({classificacao})")
 
-    elif ferramenta == "Diferença de Dias entre Datas":
-        st.subheader("Calculadora de Intervalo de Dias")
-        col1, col2 = st.columns(2)
-        with col1:
-            data1 = st.date_input("Data Inicial:", value=date.today())
-        with col2:
-            data2 = st.date_input("Data Final:", value=date.today())
-            
-        if st.button("Calcular Diferença de Dias", type="primary"):
-            diferenca = abs((data2 - data1).days)
-            st.success(f"O intervalo entre as duas datas é de **{diferenca} dias** (cerca de {diferenca/30:.1f} meses).")
+  with aba_saude[1]:
+    st.subheader("Gasto Calórico Basal (TMB)")
+    p = st.number_input("Peso (kg)", value=70.0, key="tmb_p")
+    a = st.number_input("Altura (cm)", value=175.0, key="tmb_a")
+    i = st.number_input("Idade (anos)", value=30, key="tmb_i")
+    sexo = st.selectbox("Sexo Biológico", ["Masculino", "Feminino"], key="tmb_s")
+    if st.button("Calcular TMB", key="b_tmb"):
+      if sexo == "Masculino":
+        tmb = 88.36 + (13.4 * p) + (4.8 * a) - (5.7 * i)
+      else:
+        tmb = 447.6 + (9.2 * p) + (3.1 * a) - (4.3 * i)
+      st.success(f"Gasto Calórico Basal: {tmb:.1f} kcal/dia")
 
-    elif ferramenta == "Soma de Horas e Minutos":
-        st.subheader("Somador de Jornada de Trabalho (Horas)")
-        st.write("Insira os horários no formato HH:MM para somá-los (Ex: 08:30 e 02:15).")
-        h1 = st.text_input("Horário 1 (HH:MM):", value="08:00")
-        h2 = st.text_input("Horário 2 (HH:MM):", value="02:30")
-        
-        if st.button("Somar Horas", type="primary"):
-            try:
-                def para_minutos(h_str):
-                    partes = h_str.split(":")
-                    return int(partes[0]) * 60 + int(partes[1])
-                
-                total_min = para_minutos(h1) + para_minutos(h2)
-                horas_res = total_min // 60
-                min_res = total_min % 60
-                st.success(f"Total somado: **{horas_res}h {min_res:02d}min**")
-            except:
-                st.error("Formato inválido. Certifique-se de usar o padrão HH:MM (ex: 07:30).")
+  with aba_saude[2]:
+    st.subheader("Água Diária Recomendada")
+    peso_agua = st.number_input("Seu peso (kg)", value=70.0, key="agua_p")
+    if st.button("Calcular Água", key="b_agua"):
+      total_ml = peso_agua * 35
+      st.success(
+          "Você deve consumir aproximadamente"
+          f" **{(total_ml / 1000):.2f} litros** de água por dia."
+      )
 
-# ==========================================
-# 5. SAÚDE & CORPO
-# ==========================================
-elif categoria == "Saúde & Corpo":
-    st.header("💪 Saúde & Bem-Estar")
-    ferramenta = st.selectbox("Selecione a ferramenta:", [
-        "Calculadora de IMC (Índice de Massa Corporal)", 
-        "Gasto Calórico Diário (TMB)"
-    ])
-    
-    if ferramenta == "Calculadora de IMC (Índice de Massa Corporal)":
-        st.subheader("Calculadora de IMC Online")
-        col1, col2 = st.columns(2)
-        with col1:
-            peso = st.number_input("Seu Peso (kg):", value=70.0)
-        with col2:
-            altura = st.number_input("Sua Altura (m):", value=1.75)
-            
-        if st.button("Calcular IMC", type="primary"):
-            if altura > 0:
-                imc = peso / (altura ** 2)
-                st.success(f"O seu Índice de Massa Corporal (IMC) é: **{imc:.2f}**")
-                if imc < 18.5: st.warning("Classificação: Abaixo do peso")
-                elif 18.5 <= imc < 25: st.info("Classificação: Peso normal (Saudável)")
-                elif 25 <= imc < 30: st.warning("Classificação: Sobrepeso")
-                else: st.error("Classificação: Obesidade")
+  with aba_saude[3]:
+    st.subheader("Frequência Cardíaca Máxima")
+    idade_fc = st.number_input("Sua idade", value=30, key="fc_i")
+    if st.button("Calcular Frequência", key="b_fc"):
+      fc_max = 220 - idade_fc
+      st.success(
+          f"Frequência Cardíaca Máxima: {fc_max} bpm (Ideal para treinos: "
+          f"{int(fc_max * 0.6)} a {int(fc_max * 0.85)} bpm)"
+      )
 
-    elif ferramenta == "Gasto Calórico Diário (TMB)":
-        st.subheader("Taxa Metabólica Basal e Gasto Diário")
-        peso = st.number_input("Peso (kg):", value=70.0, key="tmb_p")
-        altura_cm = st.number_input("Altura (cm):", value=175.0)
-        idade = st.number_input("Idade (anos):", value=30, step=1)
-        genero = st.radio("Gênero biológico:", ["Masculino", "Feminino"])
-        
-        if st.button("Calcular Gasto Calórico", type="primary"):
-            if genero == "Masculino":
-                tmb = 88.36 + (13.4 * peso) + (4.8 * altura_cm) - (5.7 * idade)
-            else:
-                tmb = 447.6 + (9.2 * peso) + (3.1 * altura_cm) - (4.3 * idade)
-                
-            st.success(f"Sua TMB (Gasto Calórico em Repouso): **{tmb:.0f} calorias/dia**")
-            st.info(f"💡 Para manter o peso (atividade leve): **{tmb * 1.375:.0f} kcal** | Para ganho de massa: **{(tmb * 1.375) + 400:.0f} kcal**")
+  with aba_saude[4]:
+    st.subheader("Peso Ideal Estimado")
+    alt_pi = st.number_input("Altura (m)", value=1.75, key="pi_a")
+    sexo_pi = st.selectbox("Sexo", ["Masculino", "Feminino"], key="pi_s")
+    if st.button("Calcular Peso Ideal", key="b_pi"):
+      pi = (72.7 * alt_pi) - 58 if sexo_pi == "Masculino" else (62.1 * alt_pi) - 44.7
+      st.success(f"Peso ideal estimado: {pi:.2f} kg")
 
-# ==========================================
-# 6. CONVERSÃO DE MEDIDAS
-# ==========================================
-elif categoria == "Conversão de Medidas":
-    st.header("🔄 Conversão de Medidas Práticas")
-    ferramenta = st.selectbox("Selecione a conversão:", ["Temperatura", "Comprimento", "Peso"])
-    
-    if ferramenta == "Temperatura":
-        st.subheader("Conversor de Temperatura (Celsius ⇄ Fahrenheit)")
-        val = st.number_input("Valor da temperatura:", value=25.0)
-        direcao = st.radio("Direção da conversão:", ["Celsius para Fahrenheit", "Fahrenheit para Celsius"])
-        if st.button("Converter Temperatura", type="primary"):
-            if "Celsius para" in direcao:
-                res = (val * 9/5) + 32
-                st.success(f"{val} °C equivale a **{res:.2f} °F**")
-            else:
-                res = (val - 32) * 5/9
-                st.success(f"{val} °F equivale a **{res:.2f} °C**")
+# --- 3. CATEGORIA: MATEMÁTICA E PESSOAL ---
+elif categoria == "📐 Matemática e Pessoal":
+  st.header("Matemática Prática")
 
-    elif ferramenta == "Comprimento":
-        st.subheader("Conversor de Metros para Centímetros e Quilômetros")
-        val = st.number_input("Valor em metros (m):", value=100.0)
-        if st.button("Converter Comprimento", type="primary"):
-            st.success(f"**{val} metros** correspondem a:")
-            st.write(f"- {val / 1000} Quilômetros (km)")
-            st.write(f"- {val * 100} Centímetros (cm)")
-            st.write(f"- {val * 1000} Milímetros (mm)")
+  aba_mat = st.tabs([
+      "Regra de Três",
+      "Porcentagem Básica",
+      "Média Aritmética",
+      "Equação 2º Grau (Bhaskara)",
+      "Teorema de Pitágoras",
+  ])
 
-    elif ferramenta == "Peso":
-        st.subheader("Conversor de Quilogramas para Gramas")
-        val = st.number_input("Valor em Quilogramas (kg):", value=1.0)
-        if st.button("Converter Peso", type="primary"):
-            st.success(f"**{val} kg** equivalem a **{val * 1000:,.0f} gramas (g)**.")
+  with aba_mat[0]:
+    st.subheader("Regra de Três Simples")
+    col_a1 = st.number_input("A1", value=10.0, key="r3_1")
+    col_b1 = st.number_input("B1", value=20.0, key="r3_2")
+    col_a2 = st.number_input("A2", value=30.0, key="r3_3")
+    if st.button("Calcular X", key="b_r3"):
+      x = (col_b1 * col_a2) / col_a1
+      st.success(f"O valor de X é: {x}")
+
+  with aba_mat[1]:
+    st.subheader("Cálculo de Porcentagem")
+    val_p = st.number_input("Quanto é", value=25.0, key="p_v")
+    tot_p = st.number_input("de (%)", value=200.0, key="p_t")
+    if st.button("Calcular Porcentagem", key="b_p"):
+      st.success(f"Resultado: {(val_p / 100) * tot_p}")
+
+  with aba_mat[2]:
+    st.subheader("Média Simples")
+    numeros_str = st.text_input(
+        "Insira os números separados por vírgula", "7.5, 8.0, 9.2", key="med_s"
+    )
+    if st.button("Calcular Média", key="b_med"):
+      try:
+        nums = [float(n.strip()) for n in numeros_str.split(",")]
+        st.success(f"Média Aritmética: {sum(nums) / len(nums):.2f}")
+      except:
+        st.error("Digite apenas números separados por vírgula.")
+
+  with aba_mat[3]:
+    st.subheader("Fórmula de Bhaskara")
+    a_b = st.number_input("Valor de a", value=1.0, key="bh_a")
+    b_b = st.number_input("Valor de b", value=-5.0, key="bh_b")
+    c_b = st.number_input("Valor de c", value=6.0, key="bh_c")
+    if st.button("Calcular Raízes", key="b_bh"):
+      delta = (b_b**2) - (4 * a_b * c_b)
+      if delta < 0:
+        st.error("Delta negativo: não existem raízes reais.")
+      else:
+        r1 = (-b_b + (delta**0.5)) / (2 * a_b)
+        r2 = (-b_b - (delta**0.5)) / (2 * a_b)
+        st.success(f"Raízes: x1 = {r1:.2f} | x2 = {r2:.2f}")
+
+  with aba_mat[4]:
+    st.subheader("Teorema de Pitágoras")
+    cat1 = st.number_input("Cateto A", value=3.0, key="pit_1")
+    cat2 = st.number_input("Cateto B", value=4.0, key="pit_2")
+    if st.button("Calcular Hipotenusa", key="b_pit"):
+      hip = ((cat1**2) + (cat2**2)) ** 0.5
+      st.success(f"Hipotenusa (c): {hip:.2f}")
+
+# --- 4. CATEGORIA: UTILIDADES E DIA A DIA ---
+elif categoria == "⚡ Utilidades e Dia a Dia":
+  st.header("Conversores e Utilidades Populares")
+
+  aba_util = st.tabs([
+      "Dias entre Datas",
+      "Temperatura",
+      "Gorjeta (Garçom)",
+      "Gasto de Combustível",
+      "Gerador de Senhas",
+      "Distância e Peso",
+  ])
+
+  with aba_util[0]:
+    st.subheader("Diferença de Dias entre Datas")
+    d1 = st.date_input("Data inicial", datetime.date(2026, 1, 1), key="d_ini")
+    d2 = st.date_input("Data final", datetime.date(2026, 12, 31), key="d_fim")
+    if st.button("Calcular Dias", key="b_dias"):
+      diff = (d2 - d1).days
+      st.success(f"Total de dias entre as datas: {abs(diff)} dias")
+
+  with aba_util[1]:
+    st.subheader("Conversor de Temperatura")
+    c_temp = st.number_input("Temperatura em Celsius (°C)", value=25.0, key="t_c")
+    if st.button("Converter para Fahrenheit", key="b_temp"):
+      f_temp = (c_temp * 9 / 5) + 32
+      st.success(f"Temperatura em Fahrenheit: {f_temp:.1f} °F")
+
+  with aba_util[2]:
+    st.subheader("Calculadora de Gorjeta")
+    conta = st.number_input("Valor da Conta (R$)", value=120.0, key="g_conta")
+    porc = st.slider("Porcentagem de Gorjeta (%)", 0, 30, 10, key="g_porc")
+    if st.button("Calcular Total", key="b_gorg"):
+      gorjeta = conta * (porc / 100)
+      st.success(
+          f"Gorjeta: R$ {gorjeta:.2f} | Total com gorjeta: R$"
+          f" {conta + gorjeta:.2f}"
+      )
+
+  with aba_util[3]:
+    st.subheader("Custo de Combustível por Viagem")
+    distancia_v = st.number_input(
+        "Distância da viagem (km)", value=250.0, key="cb_d"
+    )
+    consumo_carro = st.number_input(
+        "Consumo médio do carro (km/l)", value=12.0, key="cb_c"
+    )
+    preco_comb = st.number_input(
+        "Preço do litro do combustível (R$)", value=5.89, key="cb_p"
+    )
+    if st.button("Calcular Custo", key="b_cb"):
+      litros = distancia_v / consumo_carro
+      custo_total = litros * preco_comb
+      st.success(
+          f"Você vai gastar ~{litros:.1f} litros, totalizando R$"
+          f" {custo_total:.2f}"
+      )
+
+  with aba_util[4]:
+    st.subheader("Gerador de Senhas Seguras")
+    tamanho = st.slider("Tamanho da senha", 6, 32, 12, key="s_tam")
+    if st.button("Gerar Senha", key="b_senha"):
+      chars = string.ascii_letters + string.digits + string.punctuation
+      senha = "".join(random.choice(chars) for _ in range(tamanho))
+      st.code(senha)
+
+  with aba_util[5]:
+    st.subheader("Conversores Rápidos")
+    tipo_conv = st.selectbox(
+        "Selecione a conversão",
+        ["Quilômetros para Milhas", "Quilogramas para Libras"],
+    )
+    val_conv = st.number_input("Valor a converter", value=10.0, key="vc_v")
+    if st.button("Converter Unidade", key="b_conv"):
+      if tipo_conv == "Quilômetros para Milhas":
+        st.success(f"{val_conv} km = {val_conv * 0.621371:.2f} milhas")
+      else:
+        st.success(f"{val_conv} kg = {val_conv * 2.20462:.2f} libras")
